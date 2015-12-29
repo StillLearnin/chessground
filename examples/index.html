@@ -90,11 +90,21 @@
         <button onclick="resetGame()">Reset Game</button>
         <input id="fenInput"/>
         <button onclick="loadFen()">Load Fen</button>
+        <input id="moveOrig"/>
+        <input id="moveDest"/>
+        <button onclick="playMove()">Play Move</button>
         <script>
             function loadFen() {
                 console.log(document.getElementById('fenInput').value);
                 localStorage.setItem("fen", document.getElementById('fenInput').value);
                 location.reload();
+            }
+
+            function playMove() {
+                var chess = new Chess();
+                var orig = document.getElementById('moveOrig').value;
+                var dest = document.getElementById('moveDest').value;
+                chess.move({from: orig, to: dest});
             }
 
             function resetGame() {
@@ -108,19 +118,12 @@
             if(typeof(Storage) !== "undefined") {
                 fen = localStorage.getItem("fen");
             } else {
-                // Sorry! No Web Storage support..
+                alert("Sorry! No Web Storage support..");
             }
           var ground;
           var chess = new Chess();
           var onMove = function(orig, dest) {
             chess.move({from: orig, to: dest});
-            ground.set({
-              turnColor: chessToColor(chess),
-              movable: {
-                color: chessToColor(chess),
-                dests: chessToDests(chess)
-              }
-            });
             // ground.toggleOrientation();
             console.log(ground.getFen());
             localStorage.setItem("fen", ground.getFen());
@@ -133,10 +136,7 @@
               duration: 500
             },
             movable: {
-              free: false,
-              color: chessToColor(chess),
-              premove: true,
-              dests: chessToDests(chess),
+              free: true,
               events: {
                 after: onMove
               }
@@ -148,6 +148,7 @@
           if (fen)
             ground.set({fen: fen});
             //   window.cg6 = ground;
+          ground.move("e2", "e4");
         })();
         </script>
     </section>
