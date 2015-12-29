@@ -8,7 +8,7 @@
   </head>
   <body>
     <script src="../chessground.js"></script>
-     chess.js is NOT required by chessground. We include it for the examples.
+     <!--chess.js is NOT required by chessground. We include it for the examples.-->
     <script src="chess.min.js"></script>
     <script>
       function chessToDests(chess) {
@@ -24,8 +24,8 @@
       }
     </script>
 
-     <section>
-       <div class="chessground wood small merida coordinates" id="ground1"></div>
+     <!--<section>
+       <div class="chessground wood normal merida coordinates" id="ground1"></div>
        <p>Board editor</p>
        <script>
          //var controller = new cg.controller();
@@ -52,8 +52,8 @@
            window.ground1.move('e2', 'e4');
          })();
        </script>
-     </section>
-     <section>
+     </section>-->
+<!--     <section>
        <div class="chessground wood small merida coordinates" id="ground2"></div>
        <p>Free as a birrd</p>
        <script>
@@ -84,12 +84,32 @@
            }, 2000);
          })();
        </script>
-     </section>
+     </section>-->
     <section>
-        <div class="chessground normal wood merida coordinates" id="ground7"></div>
-        <p>Play a game on a single board</p>
+        <div class="chessground normal wood staunton coordinates" id="ground7"></div>
+        <button onclick="resetGame()">Reset Game</button>
+        <input id="fenInput"/>
+        <button onclick="loadFen()">Load Fen</button>
+        <script>
+            function loadFen() {
+                console.log(document.getElementById('fenInput').value);
+                localStorage.setItem("fen", document.getElementById('fenInput').value);
+                location.reload();
+            }
+
+            function resetGame() {
+                localStorage.removeItem("fen");
+                location.reload();
+            }
+        </script>
         <script>
             (function() {
+            var fen;
+            if(typeof(Storage) !== "undefined") {
+                fen = localStorage.getItem("fen");
+            } else {
+                // Sorry! No Web Storage support..
+            }
           var ground;
           var chess = new Chess();
           var onMove = function(orig, dest) {
@@ -101,9 +121,12 @@
                 dests: chessToDests(chess)
               }
             });
+            // ground.toggleOrientation();
             console.log(ground.getFen());
+            localStorage.setItem("fen", ground.getFen());
           };
           ground = Chessground(document.getElementById('ground7'), {
+            orientation: "white",
             viewOnly: false,
             turnColor: 'white',
             animation: {
@@ -122,15 +145,17 @@
               enabled: true
             }
           });
-              window.cg6 = ground;
+          if (fen)
+            ground.set({fen: fen});
+            //   window.cg6 = ground;
         })();
         </script>
     </section>
-   <section>
+<!--   <section>
        <div class="chessground blue small cburnett" id="ground5"></div>
        <p>Valid moves: white plays, then premoves</p>
        <script>
-           (function() { 
+           (function() {
            var ground;
            var chess = new Chess();
            var onMove = function(orig, dest) {
@@ -158,6 +183,6 @@
          })();
        </script>
    </section>
-  </body>
+-->  </body>
 </html>
 
