@@ -124,6 +124,13 @@
           var chess = new Chess();
           var onMove = function(orig, dest) {
             chess.move({from: orig, to: dest});
+            ground.set({
+              turnColor: chessToColor(chess),
+              movable: {
+                color: chessToColor(chess),
+                dests: chessToDests(chess)
+              }
+            });
             // ground.toggleOrientation();
             console.log(ground.getFen());
             localStorage.setItem("fen", ground.getFen());
@@ -136,7 +143,10 @@
               duration: 500
             },
             movable: {
-              free: true,
+              free: false,
+              color: chessToColor(chess),
+              premove: true,
+              dests: chessToDests(chess),
               events: {
                 after: onMove
               }
@@ -148,7 +158,7 @@
           if (fen)
             ground.set({fen: fen});
             //   window.cg6 = ground;
-          ground.move("e2", "e4");
+        //   ground.move("e2", "e4");
         })();
         </script>
     </section>
